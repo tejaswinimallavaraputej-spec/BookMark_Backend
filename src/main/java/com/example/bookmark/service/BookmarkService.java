@@ -34,8 +34,7 @@ public class BookmarkService {
         Page<Bookmark> bookmarkPage;
         
         if (search != null && !search.trim().isEmpty()) {
-            bookmarkPage = bookmarkRepository.findByTitleContainingIgnoreCaseOrUrlContainingIgnoreCaseOrderByCreatedAtDesc(
-                    search.trim(), search.trim(), pageable);
+            bookmarkPage = bookmarkRepository.searchBookmarks(search.trim(), pageable);
         } else {
             bookmarkPage = bookmarkRepository.findAllByOrderByCreatedAtDesc(pageable);
         }
