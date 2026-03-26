@@ -27,8 +27,11 @@ public class BookmarkController {
     public ResponseEntity<Page<BookmarkResponse>> getAllBookmarks(
             @RequestParam(required = false) String search,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        return ResponseEntity.ok(bookmarkService.getAllBookmarks(search, PageRequest.of(page, size)));
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "false") boolean onlyMine,
+            @AuthenticationPrincipal User user) {
+        Long userId = onlyMine ? user.getId() : null;
+        return ResponseEntity.ok(bookmarkService.getAllBookmarks(search, userId, PageRequest.of(page, size)));
     }
 
     @PostMapping

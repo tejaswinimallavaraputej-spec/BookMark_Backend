@@ -19,6 +19,14 @@ public interface BookmarkRepository extends JpaRepository<Bookmark, Long> {
             @org.springframework.data.repository.query.Param("search") String search, 
             Pageable pageable);
             
+    @org.springframework.data.jpa.repository.Query("SELECT b FROM Bookmark b WHERE b.user.id = :userId AND (" +
+            "LOWER(b.title) LIKE LOWER(CONCAT('%', :search, '%')) OR " +
+            "LOWER(b.url) LIKE LOWER(CONCAT('%', :search, '%')))")
+    Page<Bookmark> searchMyBookmarks(
+            @org.springframework.data.repository.query.Param("search") String search, 
+            @org.springframework.data.repository.query.Param("userId") Long userId, 
+            Pageable pageable);
+             
     @org.springframework.data.jpa.repository.Query("SELECT b FROM Bookmark b WHERE b.id = :id AND b.user.id = :userId")
     Optional<Bookmark> findByIdAndUserId(
             @org.springframework.data.repository.query.Param("id") Long id, 

@@ -29,13 +29,21 @@ public class BookmarkService {
         return mapToResponse(saved);
     }
 
-    public Page<BookmarkResponse> getAllBookmarks(String search, Pageable pageable) {
-        log.info("Fetching bookmarks with search: '{}', page: {}", search, pageable.getPageNumber());
+    public Page<BookmarkResponse> getAllBookmarks(String search, Long userId, Pageable pageable) {
+        log.info("Fetching bookmarks with search: '{}', userId: {}, page: {}", search, userId, pageable.getPageNumber());
         Page<Bookmark> bookmarkPage;
         
-        if (search != null && !search.trim().isEmpty()) {
-            bookmarkPage = bookmarkRepository.searchBookmarks(search.trim(), pageable);
+        boolean hasSearch = search != null && !search.trim().isEmpty();
+        String searchText = hasSearch ? search.trim() : "";
+
+        if (userId != null) {
+            // Filter by user and search
+            bookmarkPage = bookmarkRepository.searchMyBookmarks(searchText, userId, pageable);
+        } else if (hasSearch) {
+            // All bookmarks with search
+            bookmarkPage = bookmarkRepository.searchBookmarks(searchText, pageable);
         } else {
+            // All bookmarks
             bookmarkPage = bookmarkRepository.findAllByOrderByCreatedAtDesc(pageable);
         }
         
