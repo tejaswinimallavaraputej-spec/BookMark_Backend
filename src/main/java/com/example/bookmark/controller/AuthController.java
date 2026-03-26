@@ -14,8 +14,13 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-@CrossOrigin(origins = {"http://localhost:5173", "http://localhost:3000", "http://localhost:5174"})
+@CrossOrigin
 public class AuthController {
+
+    @GetMapping("/")
+    public String healthCheck() {
+        return "Vaultify API is Active and Connected!";
+    }
 
     private final AuthService authService;
 
